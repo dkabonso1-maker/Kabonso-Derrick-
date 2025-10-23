@@ -1,0 +1,69 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Grading System Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 480px; }
+    label, input, button { display:block; margin: 8px 0; }
+    #result { margin-top: 12px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Grading System (MULUNGUSHI UNIVERSITY)</h2>
+  <label for="score">Enter score (0–100):</label>
+  <input id="score" type="number" step="0.1" min="0" max="100" placeholder="e.g. 20" />
+  <button id="checkBtn">Get Grade</button>
+
+  <div id="result" aria-live="polite"></div>
+
+  <script>
+    /**
+     * Return letter grade for a numeric score using these inclusive ranges:
+     * A+ : 85 - 100
+     * A  : 75 - 84
+     * B+ : 65 - 74
+     * B  : 60 - 64
+     * C+ : 55 - 59
+     * C  : 50 - 54
+     * D  : 0  - 49
+     *
+     * If score is outside 0-100 or not a number, returns an error message.
+     */
+    function getGrade(score) {
+      // Ensure score is a number
+      const n = Number(score);
+      if (!Number.isFinite(n)) return { error: 'Please enter a valid number.' };
+
+      // Optionally allow decimals but require 0 <= score <= 100
+      if (n < 0 || n > 100) return { error: 'Score must be between 0 and 100.' };
+
+      // Use inclusive ranges
+      if (n >= 85 && n <= 100) return { grade: 'A+', remark: 'Excellent' };
+      if (n >= 75 && n <= 84)  return { grade: 'A',  remark: 'Very good' };
+      if (n >= 65 && n <= 74)  return { grade: 'B+', remark: 'Good' };
+      if (n >= 60 && n <= 64)  return { grade: 'B',  remark: 'Above average' };
+      if (n >= 55 && n <= 59)  return { grade: 'C+', remark: 'Satisfactory' };
+      if (n >= 50 && n <= 54)  return { grade: 'C',  remark: 'Pass' };
+      // 0 - 49
+      return { grade: 'D', remark: 'Fail / Needs improvement' };
+    }
+
+    // UI hookup
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      const val = document.getElementById('score').value;
+      const out = getGrade(val);
+      const resultEl = document.getElementById('result');
+
+      if (out.error) {
+        resultEl.textContent = out.error;
+        resultEl.style.color = 'crimson';
+      } else {
+        resultEl.style.color = 'black';
+        resultEl.textContent = `Score: ${val} → Grade: ${out.grade} (${out.remark})`;
+      }
+    });
+  </script>
+</body>
+</html>
